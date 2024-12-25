@@ -27,11 +27,7 @@ const registrarUsuario = async(req,res) =>{
 
 const obtenerUsuario = async (req,res)=>{
     try {
-        const Authorization = req.header("Authorization");
-        const token = Authorization.split("Bearer ")[1];
-        jwt.verify(token,"Sft-Jbs");
-        const { email } = jwt.decode(token);
-        const usuario = await obtenerUsuarioDB(email);
+        const usuario = await obtenerUsuarioDB(req.email);
         res.send(usuario);
     } catch (error) {
         res.status(500).send(error);

@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { registrarUsuario, loguearUsuario, obtenerUsuario } = require('./controllers/softJobsControllers');
+const { registrarUsuario, loguearUsuario, obtenerUsuario } = require('./controllers/softJobsControllers.js');
+const { verificarTokenMiddleware, verificarCredencialesMiddleware } = require('./middlewares/middlewares.js');
 
 app.listen(3000,console.log("Servidor corriendo en puerto 3000"));
 app.use(cors());
@@ -11,13 +12,13 @@ app.use((req,res,next) =>{
     next();
 })
 
-app.post("/login", async(req,res)=>{
+app.post("/login",verificarCredencialesMiddleware, async(req,res)=>{
     await loguearUsuario(req,res);
 });
 app.post("/usuarios",async (req,res)=>{
     await registrarUsuario(req,res);
 });
 
-app.get("/usuarios", async (req,res)=>{
+app.get("/usuarios", verificarTokenMiddleware, async (req,res)=>{
     await obtenerUsuario(req,res);
 });
